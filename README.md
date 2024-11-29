@@ -38,9 +38,9 @@ This project is part of the my Beckhoff AU Christmas Challenge showing some of m
 
 ## Video Tutorial
 
-There is a free coding byte video tutorial on this code which can be found [here](https://youtu.be/poRqmKGjpUc)
+There is a free coding byte video tutorial on this code which can be found [here](https://youtu.be/sOPT0k1tu_w)
 
-[![image](./docs/images/codingbytes.png)](https://youtu.be/poRqmKGjpUc)
+[![image](./docs/images/codingbytes.png)](https://youtu.be/sOPT0k1tu_w)
 
 ## Credits
 
