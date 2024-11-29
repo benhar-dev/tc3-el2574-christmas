@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <FileVersion>1.0.0.0</FileVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{ca5938f2-f7ac-4746-8605-1408d5d8f3dd}</ProjectGuid>
+    <SubObjectsSortedByName>True</SubObjectsSortedByName>
+    <DownloadApplicationInfo>true</DownloadApplicationInfo>
+    <WriteProductVersion>true</WriteProductVersion>
+    <GenerateTpy>false</GenerateTpy>
+    <Name>Main</Name>
+    <ProgramVersion>3.1.4024.0</ProgramVersion>
+    <Application>{9b48f323-cf7f-4596-ba63-50eed730b6a7}</Application>
+    <TypeSystem>{18ece8f8-d492-420f-852e-955753aeaf9e}</TypeSystem>
+    <Implicit_Task_Info>{8db7dcee-a3dd-42ee-9f1d-6250c9b6a4d4}</Implicit_Task_Info>
+    <Implicit_KindOfTask>{7310592d-f886-47c9-ac79-5d232cf75443}</Implicit_KindOfTask>
+    <Implicit_Jitter_Distribution>{b9809293-9822-4599-92df-5665e837ad6e}</Implicit_Jitter_Distribution>
+    <LibraryReferences>{8bf60da7-8f01-41f5-8501-cbd6431f6536}</LibraryReferences>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="PlcTask.TcTTO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Library\Animation\SpriteSheetAnimationFrames.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Library\EL2574\EL2574_ExtendedMode.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Library\ImageSerializer\Base\ImageSerializer.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Library\ImageSerializer\Interfaces\I_ImageSerializer.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Library\ImageSerializer\Matrix\MatrixImageSerializer.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Library\ImageSerializer\Null\NullImageSerializer.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Library\PixelReader\I_PixelReader.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Library\PixelReader\EL2574PixelReader.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\MAIN.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tests\EL2574PixelReader_TestSuite.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tests\UnitTests.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="POUs\Library\EL2574" />
+    <Folder Include="POUs\Library\Animation" />
+    <Folder Include="Tests" />
+    <Folder Include="POUs" />
+    <Folder Include="POUs\Library" />
+    <Folder Include="POUs\Library\ImageSerializer" />
+    <Folder Include="POUs\Library\ImageSerializer\Base" />
+    <Folder Include="POUs\Library\ImageSerializer\Interfaces" />
+    <Folder Include="POUs\Library\ImageSerializer\Matrix" />
+    <Folder Include="POUs\Library\ImageSerializer\Null" />
+    <Folder Include="POUs\Library\PixelReader" />
+  </ItemGroup>
+  <ItemGroup>
+    <PlaceholderReference Include="Tc2_Standard">
+      <DefaultResolution>Tc2_Standard, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc2_Standard</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="Tc2_System">
+      <DefaultResolution>Tc2_System, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc2_System</Namespace>
+      <Parameters>
+        <Parameter ListName="PARAM" xmlns="">
+          <Key>TABLE_UPPER_BOUND</Key>
+          <Value>15</Value>
+        </Parameter>
+        <Parameter ListName="PARAM" xmlns="">
+          <Key>STRING_LENGTH_EXP</Key>
+          <Value>255</Value>
+        </Parameter>
+        <Parameter ListName="PARAM" xmlns="">
+          <Key>STRING_LENGTH_ADDRESS</Key>
+          <Value>20</Value>
+        </Parameter>
+        <Parameter ListName="PARAM" xmlns="">
+          <Key>STRING_LENGTH_COMMENT</Key>
+          <Value>255</Value>
+        </Parameter>
+        <Parameter ListName="PARAM" xmlns="">
+          <Key>STRING_LENGTH_OUTSTRING</Key>
+          <Value>255</Value>
+        </Parameter>
+        <Parameter ListName="PARAM" xmlns="">
+          <Key>TABLE_SHOW_VALID_ITEMS</Key>
+          <Value>FALSE</Value>
+        </Parameter>
+      </Parameters>
+    </PlaceholderReference>
+    <PlaceholderReference Include="Tc3_Module">
+      <DefaultResolution>Tc3_Module, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc3_Module</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="Tc3_Vision">
+      <DefaultResolution>Tc3_Vision, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc3_Vision</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="TcUnit">
+      <DefaultResolution>TcUnit, * (www.tcunit.org)</DefaultResolution>
+    </PlaceholderReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Main.tmc">
+      <SubType>Content</SubType>
+    </None>
+  </ItemGroup>
+  <ProjectExtensions>
+    <PlcProjectOptions>
+      <XmlArchive>
+        <Data>
+          <o xml:space="preserve" t="OptionKey">
+      <v n="Name">"&lt;ProjectRoot&gt;"</v>
+      <d n="SubKeys" t="Hashtable" />
+      <d n="Values" t="Hashtable" />
+    </o>
+        </Data>
+        <TypeList>
+          <Type n="Hashtable">System.Collections.Hashtable</Type>
+          <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
+          <Type n="String">System.String</Type>
+        </TypeList>
+      </XmlArchive>
+    </PlcProjectOptions>
+  </ProjectExtensions>
+</Project>

@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="EL2574PixelReader_TestSuite" Id="{0cae4f2a-844b-0e54-29fa-b732b8791d35}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK EL2574PixelReader_TestSuite EXTENDS TcUnit.FB_TestSuite]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[TestReadAsUdint_Blank();
+TestReadAsUdint_Blue();
+TestReadAsUdint_Green();
+TestReadAsUdint_Red();]]></ST>
+    </Implementation>
+    <Method Name="TestReadAsUdint_Blank" Id="{7331d7f8-ff27-0cee-0a5c-5d57e4a64ef8}">
+      <Declaration><![CDATA[METHOD PUBLIC TestReadAsUdint_Blank
+VAR
+	pixelReader : EL2574PixelReader;
+	pixel : TcVnVector4_LREAL := [0,0,0,0];
+	actual : UDINT;
+	expected : UDINT := 0; 
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestReadAsUdint_Blank');
+
+pixelReader.Value := pixel;
+actual := pixelReader.ReadAsUdint();
+
+AssertEquals(
+	Actual := actual,
+	Expected := expected,
+	Message := 'Did not return the correct pixel value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestReadAsUdint_Blue" Id="{26602add-4fbd-4ce6-bcbe-1e58ed35b796}">
+      <Declaration><![CDATA[METHOD PUBLIC TestReadAsUdint_Blue
+VAR
+	pixelReader : EL2574PixelReader;
+	pixel : TcVnVector4_LREAL := [0,0,255,0];
+	actual : UDINT;
+	expected : UDINT := 16#00FF0000;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestReadAsUdint_Blue');
+
+pixelReader.Value := pixel;
+actual := pixelReader.ReadAsUdint();
+
+AssertEquals(
+	Actual := actual,
+	Expected := expected,
+	Message := 'Did not return the correct pixel value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestReadAsUdint_Green" Id="{24a2ec17-781d-4ac7-b268-180fb9872099}">
+      <Declaration><![CDATA[METHOD PUBLIC TestReadAsUdint_Green
+VAR
+	pixelReader : EL2574PixelReader;
+	pixel : TcVnVector4_LREAL := [0,255,0,0];
+	actual : UDINT;
+	expected : UDINT := 16#0000FF00;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestReadAsUdint_Red');
+
+pixelReader.Value := pixel;
+actual := pixelReader.ReadAsUdint();
+
+AssertEquals(
+	Actual := actual,
+	Expected := expected,
+	Message := 'Did not return the correct pixel value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestReadAsUdint_Red" Id="{1d378934-32e7-4141-be7a-8f31dae923db}">
+      <Declaration><![CDATA[METHOD PUBLIC TestReadAsUdint_Red
+VAR
+	pixelReader : EL2574PixelReader;
+	pixel : TcVnVector4_LREAL := [255,0,0,0];
+	actual : UDINT;
+	expected : UDINT := 16#000000FF;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestReadAsUdint_Red');
+
+pixelReader.Value := pixel;
+actual := pixelReader.ReadAsUdint();
+
+AssertEquals(
+	Actual := actual,
+	Expected := expected,
+	Message := 'Did not return the correct pixel value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

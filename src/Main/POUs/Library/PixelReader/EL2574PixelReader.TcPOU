@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="EL2574PixelReader" Id="{e3e9ebcd-6c2d-4826-b14a-469ee1548339}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK EL2574PixelReader IMPLEMENTS I_PixelReader
+VAR
+	pixelValue : TcVnVector4_LREAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="ReadAsUdint" Id="{117163d6-f128-4391-95bb-ce0472d06b94}">
+      <Declaration><![CDATA[METHOD PUBLIC ReadAsUdint : UDINT
+VAR_INPUT
+END_VAR
+VAR
+	pixel : ARRAY [0..3] OF BYTE;
+	pixelAsUint : UDINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[pixel[0] := LREAL_TO_BYTE(value[0]);
+pixel[1] := LREAL_TO_BYTE(value[1]);
+pixel[2] := LREAL_TO_BYTE(value[2]);
+pixel[3] := LREAL_TO_BYTE(value[3]);
+
+memcpy(ADR(pixelAsUint), ADR(pixel),SIZEOF(pixelAsUint));
+ReadAsUdint := pixelAsUint;]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Value" Id="{573b5eba-09d0-4305-827f-ce51c479cc62}">
+      <Declaration><![CDATA[PROPERTY PUBLIC Value : Reference to TcVnVector4_LREAL]]></Declaration>
+      <Get Name="Get" Id="{7fd754e2-7be9-4e97-a852-5bd0386c6292}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Value ref= pixelValue;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+  </POU>
+</TcPlcObject>

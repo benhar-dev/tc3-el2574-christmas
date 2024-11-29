@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <Itf Name="I_ImageSerializer" Id="{cb305bac-5870-4b0c-a366-7d8a0d1281e6}">
+    <Declaration><![CDATA[INTERFACE I_ImageSerializer
+]]></Declaration>
+    <Method Name="ConnectTo" Id="{ed84f8cb-c203-4f0b-bccd-097e6a749da6}">
+      <Declaration><![CDATA[METHOD PUBLIC ConnectTo
+VAR_INPUT
+	ImageSerializer : I_ImageSerializer;
+END_VAR]]></Declaration>
+    </Method>
+    <Method Name="GetTotalSerializablePixelCount" Id="{5446371e-1f85-47a3-bbf1-b3ce25dfac0f}">
+      <Declaration><![CDATA[METHOD PUBLIC GetTotalSerializablePixelCount : UDINT
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Property Name="PixelCount" Id="{40306301-2bbc-4248-a8d7-f5470f3fcfbf}">
+      <Declaration><![CDATA[PROPERTY PUBLIC PixelCount : UDINT]]></Declaration>
+      <Get Name="Get" Id="{0ec63ad1-f9d8-41dc-a7cd-de28431dba62}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Method Name="TryGetPixel" Id="{f158a363-3806-4123-b656-8fdfacffcd87}">
+      <Declaration><![CDATA[METHOD PUBLIC TryGetPixel : BOOL
+VAR_INPUT
+	PixelIndex : UDINT;
+	Reader : I_PixelReader;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="UpdateImage" Id="{5435dbba-a720-415d-a50a-5887d020598a}">
+      <Declaration><![CDATA[METHOD PUBLIC UpdateImage
+VAR_INPUT
+	Source : ITcVnImage;
+END_VAR]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>

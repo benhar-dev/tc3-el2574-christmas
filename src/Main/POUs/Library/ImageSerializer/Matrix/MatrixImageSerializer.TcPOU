@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="MatrixImageSerializer" Id="{249120fd-c819-48bc-bb68-dcc756a13efa}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK MatrixImageSerializer EXTENDS ImageSerializer
+VAR
+	height : UDINT;
+	width : UDINT;
+	x : UDINT;
+	y : UDINT;
+	image : ITcVnImage;
+	live : ITcVnDisplayableImage; // used in this demo to show the image for the matrix
+	_pixelCount : UDINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Folder Name="Constructor" Id="{0aab571f-589b-4e65-b0e7-59d258ba3c5e}" />
+    <Folder Name="Private" Id="{b017a7e9-85d4-41e8-8fce-970a56770261}" />
+    <Folder Name="Protected" Id="{0d034bdb-b3bc-4dca-a2c9-8c0d1f4b1c11}" />
+    <Method Name="FB_init" Id="{cd6eaa81-1e7e-4243-951e-cb2a5c4dde35}" FolderPath="Constructor\">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	Height : UDINT;
+	Width : UDINT;
+	X : UDINT;
+	Y : UDINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.height := Height;
+THIS^.width := Width;
+THIS^.x := X;
+THIS^.y := Y;
+
+Initialize();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Initialize" Id="{d61ee771-6f07-4501-b227-164e2e0840a2}" FolderPath="Private\">
+      <Declaration><![CDATA[METHOD PRIVATE Initialize
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_pixelCount := width * height;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="OnTryGetPixel" Id="{17647986-4700-442f-abfd-04c958d6dbbb}" FolderPath="Protected\">
+      <Declaration><![CDATA[METHOD PROTECTED OnTryGetPixel : BOOL
+VAR_INPUT
+	PixelIndex : UDINT;
+	Reader : I_PixelReader;
+END_VAR
+VAR
+	xPosition : UDINT;
+	yPosition : UDINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF width = 0 OR height = 0 THEN
+	RETURN;
+END_IF
+
+xPosition := PixelIndex MOD width;
+yPosition := PixelIndex / width;
+
+// If it's an odd row, reverse the direction
+IF yPosition MOD 2 = 1 THEN 
+    xPosition := (width - 1) - xPosition;
+END_IF
+
+OnTryGetPixel := succeeded(F_VN_GetPixel(image, Reader.Value, xPosition, yPosition, s_OK)); ]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="OnUpdateImage" Id="{674057b6-32aa-425a-8116-88dd782c52fc}" FolderPath="Protected\">
+      <Declaration><![CDATA[METHOD PROTECTED OnUpdateImage
+VAR_INPUT
+	Source : ITcVnImage;
+END_VAR
+VAR
+	result : HRESULT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[result := F_VN_CopyImage(Source, image, s_OK);
+result := F_VN_SetRoi(x, y, width, height, image, result);
+
+IF Succeeded(result) THEN
+	F_VN_CopyIntoDisplayableImage(image, live, s_ok);
+	RETURN;
+END_IF
+
+// there was an error, so best to clear the internal image as it's no longer valid.
+// but only if there was an image there in fht first place.
+
+IF image = 0 THEN
+	RETURN;
+END_IF
+
+image.TcRelease();
+image := 0;]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="PixelCount" Id="{3d5ea0d2-c8ac-49db-8dda-bf3a9b133f41}">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY PUBLIC PixelCount : UDINT]]></Declaration>
+      <Get Name="Get" Id="{1550a148-b205-487b-8c2d-bc8024750f84}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[PixelCount := _pixelCount;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+  </POU>
+</TcPlcObject>

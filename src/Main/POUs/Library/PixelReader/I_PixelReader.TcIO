@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <Itf Name="I_PixelReader" Id="{4834e65f-15d0-4adc-83a4-1dcb60389701}">
+    <Declaration><![CDATA[INTERFACE I_PixelReader
+]]></Declaration>
+    <Property Name="Value" Id="{10ca9ecb-eded-4dfa-a3b7-e67bfb0d4509}">
+      <Declaration><![CDATA[PROPERTY PUBLIC Value : Reference to TcVnVector4_LREAL]]></Declaration>
+      <Get Name="Get" Id="{b931c3ef-1860-4dd0-b61e-86b07b841634}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+  </Itf>
+</TcPlcObject>

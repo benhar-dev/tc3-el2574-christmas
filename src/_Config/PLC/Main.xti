@@ -1,0 +1,217 @@
+<?xml version="1.0"?>
+<TcSmItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4024.62" ClassName="CNestedPlcProjDef">
+	<DataTypes>
+		<DataType>
+			<Name GUID="{979B0B75-C706-0116-3B7C-F1DA38D9DB6C}" AutoDeleteType="true" ForceIecDecl="true">Status_20A76971_Plc</Name>
+			<BitSize>16</BitSize>
+			<SubItem>
+				<Name>Busy</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Transmit</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>1</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Send_Acknowledge</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>2</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Update_Acknowledge</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>3</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Command_Acknowledge</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>4</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Command_Reject</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>5</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Warning</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>10</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Error</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>11</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Input_Cycle_Counter</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000011}">BIT2</Type>
+				<BitSize>2</BitSize>
+				<BitOffs>14</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{B00DF5E8-F5C8-8EB2-0747-F6A66456AF18}" AutoDeleteType="true" ForceIecDecl="true">MDP5001_260_I_80E6114C</Name>
+			<BitSize>272</BitSize>
+			<SubItem>
+				<Name>MDP5001_260_Status</Name>
+				<Type GUID="{979B0B75-C706-0116-3B7C-F1DA38D9DB6C}">Status_20A76971_Plc</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{C34ECFC1-C235-2097-8F87-A8742B490E4F}" AutoDeleteType="true" ForceIecDecl="true">Segment_D87FC351_Plc</Name>
+			<BitSize>256</BitSize>
+			<SubItem>
+				<Name>Element_0</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Element_1</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>32</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Element_2</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>64</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Element_3</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>96</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Element_4</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>128</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Element_5</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>160</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Element_6</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>192</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Element_7</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>224</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{FCFFC25C-7C92-C549-757B-D5CF9395F3F6}" AutoDeleteType="true" ForceIecDecl="true">Extended_Control_0090502F_Plc</Name>
+			<BitSize>272</BitSize>
+			<SubItem>
+				<Name>Execute</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Send</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>1</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Update</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>2</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Write</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>3</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Index</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>8</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Segment</Name>
+				<Type GUID="{C34ECFC1-C235-2097-8F87-A8742B490E4F}">Segment_D87FC351_Plc</Type>
+				<BitSize>256</BitSize>
+				<BitOffs>16</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{B00DF5E9-F5C8-8EB2-0747-F6A66456AF18}" AutoDeleteType="true" ForceIecDecl="true">MDP5001_260_O_80E6114C</Name>
+			<BitSize>272</BitSize>
+			<SubItem>
+				<Name>MDP5001_260_Extended_Control</Name>
+				<Type GUID="{FCFFC25C-7C92-C549-757B-D5CF9395F3F6}">Extended_Control_0090502F_Plc</Type>
+				<BitSize>272</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+		</DataType>
+	</DataTypes>
+	<Project GUID="{CA5938F2-F7AC-4746-8605-1408D5D8F3DD}" Name="Main" PrjFilePath="..\..\Main\Main.plcproj" TmcFilePath="..\..\Main\Main.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
+		<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="Main\Main.tmc" TmcHash="{FC04FF31-2A76-E14D-FC44-5CE3F0C82081}">
+			<Name>Main Instance</Name>
+			<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
+			<Vars VarGrpType="1">
+				<Name>PlcTask Inputs</Name>
+				<Var>
+					<Name>MAIN.el2574.pdo.MDP5001_260_Input</Name>
+					<Type GUID="{B00DF5E8-F5C8-8EB2-0747-F6A66456AF18}">MDP5001_260_I_80E6114C</Type>
+				</Var>
+			</Vars>
+			<Vars VarGrpType="2" AreaNo="1">
+				<Name>PlcTask Outputs</Name>
+				<Var>
+					<Name>MAIN.el2574.pdo.MDP5001_260_Output</Name>
+					<Type GUID="{B00DF5E9-F5C8-8EB2-0747-F6A66456AF18}">MDP5001_260_O_80E6114C</Type>
+				</Var>
+			</Vars>
+			<Contexts>
+				<Context>
+					<Id>0</Id>
+					<Name>PlcTask</Name>
+					<ManualConfig>
+						<OTCID>#x02010030</OTCID>
+					</ManualConfig>
+					<Priority>20</Priority>
+					<CycleTime>200000</CycleTime>
+				</Context>
+			</Contexts>
+			<TaskPouOids>
+				<TaskPouOid Prio="20" OTCID="#x08502001"/>
+			</TaskPouOids>
+		</Instance>
+	</Project>
+	<Mappings>
+		<OwnerA Name="Main Instance">
+			<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 1 (EK1100)^Term 4 (EL2574)">
+				<Link VarA="PlcTask Inputs^MAIN.el2574.pdo.MDP5001_260_Input^MDP5001_260_Status" VarB="SlotGroup 1 (Slot 1, 2) (1xASYNC)^Status Channel 1^Status"/>
+				<Link VarA="PlcTask Outputs^MAIN.el2574.pdo.MDP5001_260_Output^MDP5001_260_Extended_Control" VarB="SlotGroup 1 (Slot 1, 2) (1xASYNC)^Extended Channel 1^Extended Control"/>
+			</OwnerB>
+		</OwnerA>
+	</Mappings>
+</TcSmItem>

@@ -1,0 +1,188 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="SpriteSheetAnimationFrames" Id="{d28c0ddf-ffdd-454b-af0f-acb5bf9aa81a}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK SpriteSheetAnimationFrames
+VAR
+	spriteSheetFilePath : T_MAXSTRING;
+	spriteWidth : UDINT;
+	spriteHeight : UDINT;
+	totalSprites : UDINT;
+	columns : UDINT;
+	rows : UDINT;
+	spriteSheetImage : ITcVnImage;
+	readImage: FB_VN_ReadImage;
+	
+	// animation variables
+	_currentFrameIndex : UDINT;
+	_currentFrameImage : ITcVnImage;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Folder Name="Constructor" Id="{2dc1fcc5-fe39-4ab3-990e-a40313008602}" />
+    <Folder Name="Private" Id="{5f1236e4-977d-4c2b-9f82-917a26ae9917}" />
+    <Property Name="CurrentFrameImage" Id="{7eed3f1d-24a4-4b7f-807b-e67f3bb2cedf}">
+      <Declaration><![CDATA[PROPERTY PUBLIC CurrentFrameImage : ITcVnImage]]></Declaration>
+      <Get Name="Get" Id="{d3a9abee-c421-46be-85a4-076d9cb6728a}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[CurrentFrameImage := _currentFrameImage;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="CurrentFrameIndex" Id="{7ebf164b-8823-4e72-ae20-56d870b0a047}">
+      <Declaration><![CDATA[PROPERTY PUBLIC CurrentFrameIndex : UDINT]]></Declaration>
+      <Get Name="Get" Id="{af68c9a1-eb15-4aa9-a945-317f81d8971d}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[CurrentFrameIndex := _currentFrameIndex;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="FB_init" Id="{236f79e8-3370-4e5e-84ba-000dc06437e2}" FolderPath="Constructor\">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	SpriteSheetFilePath : T_MAXSTRING;
+	SpriteWidth : UDINT;
+	SpriteHeight : UDINT;
+	TotalSprites : UDINT;
+	Columns : UDINT;
+	Rows : UDINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.spriteSheetFilePath := SpriteSheetFilePath;
+THIS^.spriteWidth := SpriteWidth;
+THIS^.spriteHeight := SpriteHeight;
+THIS^.totalSprites := TotalSprites;
+THIS^.columns := Columns;
+THIS^.rows := Rows;]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="IsAtLastFrame" Id="{a2ed32b5-2a89-414d-bda9-fe3764b0c496}">
+      <Declaration><![CDATA[PROPERTY PUBLIC IsAtLastFrame : BOOL]]></Declaration>
+      <Get Name="Get" Id="{7c750380-163f-4e9e-b08d-d9ed67a30789}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IF TotalFrameCount = 0 THEN
+	IsAtLastFrame := TRUE;
+	RETURN;
+END_IF
+
+IsAtLastFrame := CurrentFrameIndex = TotalFrameCount - 1;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="MoveToStart" Id="{f34c7f15-d205-4004-b315-4a1c0e9b3abc}">
+      <Declaration><![CDATA[METHOD PUBLIC MoveToStart
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_currentFrameIndex := 0;
+TryGetSprite(_currentFrameIndex, _currentFrameImage);]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="TotalFrameCount" Id="{76fe5976-5bb5-4706-aa9b-a7897641e14a}">
+      <Declaration><![CDATA[PROPERTY PUBLIC TotalFrameCount : UDINT]]></Declaration>
+      <Get Name="Get" Id="{28eef738-fec6-4adf-b0c6-83837418330b}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[TotalFrameCount := totalSprites;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="TryGetSprite" Id="{daabe6d8-56ff-421e-b74f-0f0902a20d80}" FolderPath="Private\">
+      <Declaration><![CDATA[METHOD PRIVATE TryGetSprite : BOOL
+VAR_INPUT
+	Index : UDINT;
+	Destination : REFERENCE TO ITcVnImage;
+END_VAR
+VAR
+	spriteX : UDINT;
+	spriteY : UDINT;
+	spriteColumn : UDINT;
+	spriteRow : UDINT;
+	result : HRESULT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Index > TotalFrameCount - 1 THEN
+	RETURN;
+END_IF
+
+spriteColumn := Index MOD columns;
+spriteRow := Index / columns;
+
+spriteX := spriteColumn * spriteWidth;
+spriteY := spriteRow * spriteHeight;
+
+result := F_VN_CopyImage(spriteSheetImage, _currentFrameImage, s_OK);
+result := F_VN_SetRoi(spriteX, spriteY, spriteWidth, spriteHeight, _currentFrameImage, result);
+
+TryGetSprite := Succeeded(result);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryLoad" Id="{f737a074-84cf-4fbb-8517-d5385a7c987b}">
+      <Declaration><![CDATA[METHOD PUBLIC TryLoad : BOOL
+VAR
+	i : UDINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// if we already have an image loaded, then we can early jump out as we know everything is done. 
+IF spriteSheetImage <> 0 THEN
+	TryLoad := TRUE;
+	RETURN;
+END_IF
+
+IF spriteSheetFilePath = '' OR  spriteWidth = 0 OR spriteHeight = 0 OR totalSprites = 0 OR columns = 0 OR rows = 0 THEN
+	// this is our sanity check, we return out if anything is bad.
+	// if we pass this point we know we can use the variables confidently.
+	RETURN;
+END_IF
+
+// we keep polling the read until an image is read.  If it faults due to error then we just sit here and never return true.
+readImage(sFilePath := spriteSheetFilePath, ipDestImage := spriteSheetImage, bRead := TRUE, nTimeout := T#500MS);
+IF readImage.bBusy THEN 
+	RETURN;
+END_IF
+
+IF readImage.bError THEN 
+	RETURN;
+END_IF 
+
+// at this point we should have an image, so we will do one final check before moving on.  
+IF spriteSheetImage = 0 THEN
+	RETURN;
+END_IF
+
+// we have made it this far, which means we need to set the CurrentFrameImage to the first part of the image and report as done. 
+MoveToStart();
+TryLoad := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryMoveNext" Id="{6c8107ea-5438-4b15-a392-622897f94951}">
+      <Declaration><![CDATA[METHOD PUBLIC TryMoveNext : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _currentFrameIndex = TotalFrameCount - 1 THEN
+	RETURN;
+END_IF
+
+_currentFrameIndex := _currentFrameIndex + 1;
+TryMoveNext := TryGetSprite(_currentFrameIndex, _currentFrameImage);]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

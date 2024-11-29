@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="ImageSerializer" Id="{6fc78c58-8b90-45d9-bf62-8d6f387cbe56}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK ABSTRACT ImageSerializer IMPLEMENTS I_ImageSerializer
+VAR
+	// using the null object pattern so that you no longer need to check to see if next is <> 0
+	nullImageSerializer : NullImageSerializer;
+	next : I_ImageSerializer := nullImageSerializer;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Folder Name="Protected" Id="{d07104a6-c027-4095-aa86-455eb25b339d}" />
+    <Method Name="ConnectTo" Id="{7be58df5-f809-46e8-a62c-0f1e85d4358d}">
+      <Declaration><![CDATA[METHOD PUBLIC ConnectTo
+VAR_INPUT
+	ImageSerializer : I_ImageSerializer;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF ImageSerializer = 0  THEN
+	next := nullImageSerializer;
+END_IF
+
+IF ImageSerializer = next THEN
+	RETURN;
+END_IF
+
+next := ImageSerializer;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetTotalSerializablePixelCount" Id="{ba7cadfc-3f64-41b3-aba7-a43f3c7c9b56}">
+      <Declaration><![CDATA[METHOD PUBLIC GetTotalSerializablePixelCount : UDINT
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[GetTotalSerializablePixelCount := PixelCount + NextSerializer.GetTotalSerializablePixelCount();]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="NextSerializer" Id="{78201b37-27ed-41ba-b447-7615105bee67}">
+      <Declaration><![CDATA[PROPERTY PUBLIC NextSerializer : I_ImageSerializer]]></Declaration>
+      <Get Name="Get" Id="{ca052da0-28cc-4058-b16c-8d906d52b21b}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[NextSerializer := next;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="OnTryGetPixel" Id="{76d062ed-b826-4a8b-a504-5cfde9cd56b4}" FolderPath="Protected\">
+      <Declaration><![CDATA[METHOD PROTECTED ABSTRACT OnTryGetPixel : BOOL
+VAR_INPUT
+	PixelIndex : UDINT;
+	Reader : I_PixelReader;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="OnUpdateImage" Id="{036c4267-67a1-4120-8b84-2e2de1ada669}" FolderPath="Protected\">
+      <Declaration><![CDATA[METHOD PROTECTED ABSTRACT OnUpdateImage
+VAR_INPUT
+	Source : ITcVnImage;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="PixelCount" Id="{3c5fdd49-7b06-4a05-8cb2-b1de35026c39}">
+      <Declaration><![CDATA[PROPERTY PUBLIC ABSTRACT PixelCount : UDINT]]></Declaration>
+      <Get Name="Get" Id="{e4523d75-2896-4f6f-94a4-3bff71daf5b9}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="TryGetPixel" Id="{3ddc595e-4b06-497f-8035-40073b6f5da5}">
+      <Declaration><![CDATA[METHOD PUBLIC TryGetPixel : BOOL
+VAR_INPUT
+	PixelIndex : UDINT;
+	Reader : I_PixelReader;
+END_VAR
+VAR
+	newPixelIndex : UDINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF PixelIndex > PixelCount - 1 THEN
+	newPixelIndex := PixelIndex - PixelCount;
+	TryGetPixel := NextSerializer.TryGetPixel(newPixelIndex, Reader);
+	RETURN;
+END_IF
+
+TryGetPixel := OnTryGetPixel(PixelIndex, Reader);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="UpdateImage" Id="{9d647742-85a6-4efa-b653-57036bfc40d6}">
+      <Declaration><![CDATA[METHOD PUBLIC UpdateImage
+VAR_INPUT
+	Source : ITcVnImage;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Source = 0 THEN
+	RETURN;
+END_IF
+
+OnUpdateImage(Source);
+NextSerializer.UpdateImage(Source);]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

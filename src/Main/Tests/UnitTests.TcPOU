@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="UnitTests" Id="{fae0dbda-b8b2-485e-99f6-b0e512bdb931}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM UnitTests
+VAR
+	el2574PixelReader_TestSuite : EL2574PixelReader_TestSuite;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[TcUnit.RUN();]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

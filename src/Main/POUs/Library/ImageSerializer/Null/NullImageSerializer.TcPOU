@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="NullImageSerializer" Id="{2a0e6b0d-b602-4b71-9152-c6f55d4baf8e}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK NullImageSerializer IMPLEMENTS I_ImageSerializer
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="ConnectTo" Id="{abec6695-355a-4221-bb10-54168c04ab50}">
+      <Declaration><![CDATA[METHOD PUBLIC ConnectTo
+VAR_INPUT
+	ImageSerializer : I_ImageSerializer;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetTotalSerializablePixelCount" Id="{d402f688-098f-4de0-8b0e-c25b3509152e}">
+      <Declaration><![CDATA[METHOD PUBLIC GetTotalSerializablePixelCount : UDINT
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[GetTotalSerializablePixelCount := 0;]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="PixelCount" Id="{7d567119-b3da-4b6c-acba-ef6349c8663c}">
+      <Declaration><![CDATA[PROPERTY PUBLIC PixelCount : UDINT]]></Declaration>
+      <Get Name="Get" Id="{435eb4e0-3cd6-4977-891c-6680cd3733d7}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[PixelCount := 0;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="TryGetPixel" Id="{f7ba1710-8e4e-4b6b-be1b-ca79db67a3b7}">
+      <Declaration><![CDATA[METHOD PUBLIC TryGetPixel : BOOL
+VAR_INPUT
+	PixelIndex : UDINT;
+	Reader : I_PixelReader;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TryGetPixel := FALSE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="UpdateImage" Id="{77b43070-e487-48b4-ae21-9746621f679a}">
+      <Declaration><![CDATA[METHOD PUBLIC UpdateImage
+VAR_INPUT
+	Source : ITcVnImage;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

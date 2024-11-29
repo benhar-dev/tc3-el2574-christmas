@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="MAIN" Id="{af29135f-2f20-4127-9f00-00637cac4dff}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR
+	// demo triggers
+	startAnimation : BOOL := TRUE;
+	clear : BOOL := FALSE;
+	
+	// helpers
+	animation : SpriteSheetAnimationFrames(
+		SpriteSheetFilePath := 'C:\temp\christmas-invert.png',
+		SpriteWidth := 32,
+		SpriteHeight := 16,
+		TotalSprites := 46,
+		Columns := 2,
+		Rows := 3
+	);
+
+	// equipment
+	matrix1 : MatrixImageSerializer(Height := 16, Width := 16, X := 0, Y := 0); // 0 - 255
+	matrix2 : MatrixImageSerializer(Height := 16, Width := 16, X := 16, Y := 0); // 256 - 511
+	el2574 : EL2574_ExtendedMode(TotalPixels := 512); // you need to pass in the total number of pixels connected to the EK2574
+	
+	// program variables
+	initialized : BOOL;
+	animationRTrigger : R_TRIG;
+	animationTimer : ton;
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*
+
+  _____ __  __ _____   ____  _____ _______       _   _ _______ _ 
+ |_   _|  \/  |  __ \ / __ \|  __ \__   __|/\   | \ | |__   __| |
+   | | | \  / | |__) | |  | | |__) | | |  /  \  |  \| |  | |  | |
+   | | | |\/| |  ___/| |  | |  _  /  | | / /\ \ | . ` |  | |  | |
+  _| |_| |  | | |    | |__| | | \ \  | |/ ____ \| |\  |  | |  |_|
+ |_____|_|  |_|_|     \____/|_|  \_\ |_/_/    \_\_| \_|  |_|  (_)
+ 
+Competition Clause: 
+
+During the Beckhoff Christmas coding competition involving the EL2574 
+LED controller terminal, if any Beckhoff subsidiaries use, borrow from, or are inspired
+by this code for their own competition entry, they must acknowledge the inspiration by 
+including the hashtag #codingbytes in any LinkedIn posts related to their competition entry. 
+This requirement is in effect until the conclusion OF the competition on 25th December 2024.
+
+*)
+
+IF NOT initialized THEN
+	// First setup the wiring of the units.  This must be in the order they are physically connected.
+	matrix1.ConnectTo(matrix2);
+	// that's initializing done!
+	initialized := TRUE;
+END_IF
+
+// we wait here until the animation source image is loaded.
+// i.e. we return, which prevents the program from progressing past this line.
+IF NOT animation.TryLoad() THEN
+    RETURN;
+END_IF
+
+// basic clear trigger.  Set clear TRUE to clear the display
+IF clear AND_THEN el2574.TrySendClearAll() THEN
+	clear := FALSE;
+END_IF
+
+// animation logic.  Set startAnimation to TRUE to begin the animation.
+
+// just to make things tidy, when a rising edge is detected on startAnimation then
+// reset the animation to the start.
+animationRTrigger(Clk:=startAnimation);
+IF animationRTrigger.Q THEN
+	animation.MoveToStart();
+END_IF
+
+// using a simple pulsing timer of 100ms, update the image in the connected matrixs and 
+// tell the terminal to display the new frame.
+//
+// if we can no longer move to the next frame, then this means we are at the end, so 
+// we tell the animation to start again. 
+animationTimer(in:=NOT animationTimer.q, pt:=T#100MS);
+IF startAnimation AND animationTimer.Q THEN
+		
+	matrix1.UpdateImage(animation.CurrentFrameImage);
+	el2574.TrySendPixelsFromSerializer(matrix1);
+	
+	IF NOT animation.TryMoveNext() THEN
+		animation.MoveToStart();
+	END_IF
+
+END_IF
+
+// cyclic call the terminal so that it can do it's job.
+el2574.CyclicCall();
+
+// unit tests
+UnitTests();]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

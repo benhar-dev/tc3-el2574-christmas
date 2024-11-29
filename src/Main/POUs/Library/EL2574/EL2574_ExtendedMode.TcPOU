@@ -1,0 +1,197 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="EL2574_ExtendedMode" Id="{17c299d0-1620-4ec2-a0df-5d122f9c52a3}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK EL2574_ExtendedMode
+VAR
+	totalPixels : UDINT;
+	pdo : MDP5001_260_80E6114C;
+	sendBuffer : ARRAY [0..MAX_PIXELS - 1] OF UDINT;
+	sendSegmentCount : USINT;
+	currentSegment : USINT;
+	state : (IDLE, INITIALIZING, SEND_SEGMENT, TRIGGER_FRAME_SEND, WAIT_FOR_FRAME_SEND_COMPLETE, ERROR);
+END_VAR
+VAR CONSTANT
+	MAX_PIXELS : UDINT := 2048;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Folder Name="Constructor" Id="{e9dde36f-2f3e-418f-baba-80e598ea538d}" />
+    <Folder Name="Private" Id="{2cdc45a9-c122-4d91-a4a3-640c4b46ffd3}" />
+    <Method Name="CreateSendBufferFromSerializer" Id="{c5e9e454-cf6b-4238-a006-728f2dfbc811}" FolderPath="Private\">
+      <Declaration><![CDATA[METHOD PRIVATE CreateSendBufferFromSerializer
+VAR_INPUT
+	ImageSerializer : I_ImageSerializer;
+END_VAR
+VAR
+	currentPixel : UDINT := 0;
+	pixelReader : EL2574PixelReader;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[WHILE ImageSerializer.TryGetPixel(currentPixel, pixelReader) DO
+	sendBuffer[currentPixel] := pixelReader.ReadAsUdint();
+	currentPixel := currentPixel + 1;
+END_WHILE]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CyclicCall" Id="{02160b27-b43c-4d05-b124-d8397991643d}">
+      <Declaration><![CDATA[METHOD PUBLIC CyclicCall
+VAR_INPUT
+END_VAR
+VAR
+	totalSegments : UDINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[CASE state OF
+	
+	IDLE : RETURN;
+	ERROR : RETURN;
+	
+	INITIALIZING :
+	
+		// initialize local variables
+		currentSegment := 0;
+		totalSegments := totalPixels / 8;
+		sendSegmentCount := UDINT_TO_USINT(totalSegments);
+	
+		// reset the card to a known state
+		pdo.MDP5001_260_Output.MDP5001_260_Extended_Control.Index := 0;
+		pdo.MDP5001_260_Output.MDP5001_260_Extended_Control.Send := FALSE;
+		pdo.MDP5001_260_Output.MDP5001_260_Extended_Control.Update := FALSE;
+		pdo.MDP5001_260_Output.MDP5001_260_Extended_Control.Write := FALSE;
+		pdo.MDP5001_260_Output.MDP5001_260_Extended_Control.Segment.Element_0 := 0;
+		pdo.MDP5001_260_Output.MDP5001_260_Extended_Control.Segment.Element_1 := 0;
+		pdo.MDP5001_260_Output.MDP5001_260_Extended_Control.Segment.Element_2 := 0;
+		pdo.MDP5001_260_Output.MDP5001_260_Extended_Control.Segment.Element_3 := 0;
+		pdo.MDP5001_260_Output.MDP5001_260_Extended_Control.Segment.Element_4 := 0;
+		pdo.MDP5001_260_Output.MDP5001_260_Extended_Control.Segment.Element_5 := 0;
+		pdo.MDP5001_260_Output.MDP5001_260_Extended_Control.Segment.Element_6 := 0;
+		pdo.MDP5001_260_Output.MDP5001_260_Extended_Control.Segment.Element_7 := 0;
+		
+		// start sending....
+		state := SEND_SEGMENT;
+
+	SEND_SEGMENT :
+		
+		pdo.MDP5001_260_Output.MDP5001_260_Extended_Control.Index := currentSegment;
+		pdo.MDP5001_260_Output.MDP5001_260_Extended_Control.Segment.Element_0 := sendBuffer[currentSegment * 8 + 0];
+		pdo.MDP5001_260_Output.MDP5001_260_Extended_Control.Segment.Element_1 := sendBuffer[currentSegment * 8 + 1];
+		pdo.MDP5001_260_Output.MDP5001_260_Extended_Control.Segment.Element_2 := sendBuffer[currentSegment * 8 + 2];
+		pdo.MDP5001_260_Output.MDP5001_260_Extended_Control.Segment.Element_3 := sendBuffer[currentSegment * 8 + 3];
+		pdo.MDP5001_260_Output.MDP5001_260_Extended_Control.Segment.Element_4 := sendBuffer[currentSegment * 8 + 4];
+		pdo.MDP5001_260_Output.MDP5001_260_Extended_Control.Segment.Element_5 := sendBuffer[currentSegment * 8 + 5];
+		pdo.MDP5001_260_Output.MDP5001_260_Extended_Control.Segment.Element_6 := sendBuffer[currentSegment * 8 + 6];
+		pdo.MDP5001_260_Output.MDP5001_260_Extended_Control.Segment.Element_7 := sendBuffer[currentSegment * 8 + 7];
+		pdo.MDP5001_260_Output.MDP5001_260_Extended_Control.Write := TRUE;
+		pdo.MDP5001_260_Output.MDP5001_260_Extended_Control.Execute := NOT pdo.MDP5001_260_Output.MDP5001_260_Extended_Control.Execute;
+		
+		IF currentSegment = sendSegmentCount THEN
+			state := TRIGGER_FRAME_SEND;
+		ELSE
+			currentSegment := currentSegment + 1;
+		END_IF
+		
+	TRIGGER_FRAME_SEND : 
+	
+		pdo.MDP5001_260_Output.MDP5001_260_Extended_Control.Write := FALSE;
+		pdo.MDP5001_260_Output.MDP5001_260_Extended_Control.Update := TRUE;
+		pdo.MDP5001_260_Output.MDP5001_260_Extended_Control.Send := TRUE;
+		pdo.MDP5001_260_Output.MDP5001_260_Extended_Control.Execute := NOT pdo.MDP5001_260_Output.MDP5001_260_Extended_Control.Execute;
+		
+		state := WAIT_FOR_FRAME_SEND_COMPLETE;
+		
+	WAIT_FOR_FRAME_SEND_COMPLETE:
+	
+		IF NOT pdo.MDP5001_260_Input.MDP5001_260_Status.Busy THEN
+			pdo.MDP5001_260_Output.MDP5001_260_Extended_Control.Update := FALSE;
+			pdo.MDP5001_260_Output.MDP5001_260_Extended_Control.Send := FALSE;
+			state := IDLE;
+		END_IF
+
+		
+END_CASE]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_init" Id="{32bc4bc8-d00c-46e1-945e-db6896309f6e}" FolderPath="Constructor\">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	TotalPixels : UDINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[This^.totalPixels := TotalPixels;]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="HasError" Id="{8acd112e-f0c0-40d0-a854-e2df53949864}">
+      <Declaration><![CDATA[PROPERTY PUBLIC HasError : BOOL]]></Declaration>
+      <Get Name="Get" Id="{38035eb0-68c1-45ab-a45f-660f75d215bf}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[HasError := state = Error;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="IsBusy" Id="{13cc40cb-795f-4243-8647-a2be481b7971}">
+      <Declaration><![CDATA[PROPERTY PUBLIC IsBusy : BOOL]]></Declaration>
+      <Get Name="Get" Id="{cf86f569-b3d9-4d85-b515-1af5d460602d}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IsBusy := not(state = IDLE or_else state = ERROR);]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="ResetSendBuffer" Id="{0b62e864-67c6-4258-8c8f-460dbb63f024}" FolderPath="Private\">
+      <Declaration><![CDATA[METHOD PRIVATE ResetSendBuffer
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[memset(ADR(sendBuffer), 0,SIZEOF(sendBuffer));]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TrySendClearAll" Id="{8154dbc8-2940-45e7-9ac4-ff20e88189f6}">
+      <Declaration><![CDATA[METHOD PUBLIC TrySendClearAll : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF IsBusy THEN 
+	RETURN;
+END_IF
+
+state := INITIALIZING;
+
+ResetSendBuffer();
+TrySendClearAll := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TrySendPixelsFromSerializer" Id="{4284f2bf-e030-4882-be34-703ce1d66ede}">
+      <Declaration><![CDATA[METHOD PUBLIC TrySendPixelsFromSerializer : BOOL
+VAR_INPUT
+	ImageSerializer : I_ImageSerializer;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF IsBusy THEN 
+	RETURN;
+END_IF
+
+IF ImageSerializer.GetTotalSerializablePixelCount() > totalPixels THEN 
+	RETURN;
+END_IF
+
+state := INITIALIZING;
+
+ResetSendBuffer();
+CreateSendBufferFromSerializer(ImageSerializer);
+TrySendPixelsFromSerializer := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>
