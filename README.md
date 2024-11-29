@@ -9,9 +9,20 @@
   | | | |\/| |  ___/| |  | |  _  /  | | / /\ \ | . ` |  | |  | |
  _| |_| |  | | |    | |__| | | \ \  | |/ ____ \| |\  |  | |  |_|
 |_____|_|  |_|_|     \____/|_|  \_\ |_/_/    \_\_| \_|  |_|  (_)
+
+______________________________________________________________
 ```
 
-During the Beckhoff Christmas coding competition involving the EL2574 LED controller terminal, if any **Beckhoff subsidiaries** use, borrow from, or are inspired by this code for their own competition entry, they must acknowledge the inspiration by including the hashtag #codingbytes in any LinkedIn posts related to their competition entry. This requirement is in effect until the conclusion of the competition on 25th December 2024.
+During the Beckhoff Christmas coding competition involving the EL2574 LED controller terminal, 
+if any **Beckhoff subsidiaries** use, borrow from, or are inspired by this code for their own 
+competition entry, they must acknowledge the inspiration by including the hashtag `#codingbytes` 
+in any LinkedIn posts related to their competition entry. 
+
+This requirement is in effect until the conclusion of the competition on 25th December 2024.
+
+```
+ ______________________________________________________________
+```
 
 ## Disclaimer
 
